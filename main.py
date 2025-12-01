@@ -16,6 +16,8 @@ if __name__ == "__main__":
     print("Loaded electricity price timeseries:")
     print(df.head())
 
+    print(df.mean())
+
     print("Loaded price duration curves data:")
     print(pdc_df.head())
 
