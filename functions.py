@@ -1,6 +1,7 @@
 from pathlib import Path
 import re
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def load_electricity_price_timeseries(
@@ -56,6 +57,7 @@ def load_electricity_price_timeseries(
 
     return combined
 
+
 def compute_price_duration_curve(df):
     """
     Compute price-duration curves for each column in the DataFrame.
@@ -103,3 +105,48 @@ def compute_price_duration_curve(df):
     pdc_df.index.name = "rank"
 
     return pdc_df
+
+
+def plot_price_duration_curves(
+    pdc_df: pd.DataFrame,
+    y_min: float | None = 0,
+    y_max: float | None = 400,
+    output_folder: str = "outputs/price-duration_curves",
+    filename: str = "price_duration_curves.png",
+) -> Path:
+    """
+    Plot price-duration curves for all columns in the given DataFrame (pdc_df)
+    and convert the x-axis (rank) to percentage (0–100%).
+    """
+    if pdc_df.empty:
+        raise ValueError("Input DataFrame for plotting is empty.")
+
+    output_path = Path(output_folder)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # ---- Rank -> Prozent ----
+    max_rank = pdc_df.index.max()
+    x_percent = (pdc_df.index / max_rank) * 100  # 0–100 %
+
+    fig, ax = plt.subplots()
+
+    for col in pdc_df.columns:
+        ax.plot(x_percent, pdc_df[col], label=str(col))
+
+    ax.set_xlabel("Duration [%]")
+    ax.set_ylabel("Electricity price [€/MWh]")
+    ax.set_title("Price-duration curves (0–100%)")
+
+    if (y_min is not None) or (y_max is not None):
+        ax.set_ylim(bottom=y_min, top=y_max)
+
+    ax.set_xlim(0, 100)  # immer sauber 0–100 %
+    ax.legend()
+    fig.tight_layout()
+
+    file_path = output_path / filename
+    fig.savefig(file_path, dpi=300)
+    plt.close(fig)
+
+    return file_path
+

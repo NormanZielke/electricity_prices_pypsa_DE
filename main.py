@@ -1,6 +1,7 @@
 from functions import (
     load_electricity_price_timeseries,
     compute_price_duration_curve,
+    plot_price_duration_curves
 )
 
 args = {
@@ -10,10 +11,12 @@ args = {
 if __name__ == "__main__":
     df = load_electricity_price_timeseries(args["direction"])
 
-    pdc = compute_price_duration_curve(df)
+    pdc_df = compute_price_duration_curve(df)
 
     print("Loaded electricity price timeseries:")
     print(df.head())
 
     print("Loaded price duration curves data:")
-    print(pdc.head())
+    print(pdc_df.head())
+
+    plot_price_duration_curves(pdc_df)
