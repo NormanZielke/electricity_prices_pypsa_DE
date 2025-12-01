@@ -55,3 +55,51 @@ def load_electricity_price_timeseries(
     combined = combined.reindex(sorted(combined.columns), axis=1)
 
     return combined
+
+def compute_price_duration_curve(df):
+    """
+    Compute price-duration curves for each column in the DataFrame.
+
+    For each column:
+    - Drop NaN values.
+    - Sort prices (default: descending -> high to low).
+    - Return a new DataFrame where the index is the rank (1 = highest price
+      if ascending=False) and columns correspond to the original columns.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input DataFrame with a time-based index and one column per scenario/year.
+    ascending : bool, optional
+        Sort order for prices. Default is False (descending = typical PDC).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame of price-duration curves. Index = rank (1..N), columns = same
+        as input.
+    """
+
+    if df.empty:
+        raise ValueError("Input DataFrame is empty.")
+
+    sorted_series = []
+
+    for col in df.columns:
+        # Drop NaN to avoid messing up the duration
+        s = df[col].dropna()
+
+        if s.empty:
+            raise ValueError(f"Column '{col}' contains only NaN values.")
+
+        s_sorted = s.sort_values(ascending=False).reset_index(drop=True)
+        s_sorted.name = col
+        sorted_series.append(s_sorted)
+
+    pdc_df = pd.concat(sorted_series, axis=1)
+
+    # Make the index start at 1 to represent the rank (duration step)
+    pdc_df.index = pdc_df.index + 1
+    pdc_df.index.name = "rank"
+
+    return pdc_df
