@@ -3,6 +3,8 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 
+plt.style.use("bmh")
+
 
 def load_electricity_price_timeseries(
     folder: str = "input/electricity_prices_pypsa_DE_timeseries"
@@ -89,7 +91,7 @@ def compute_price_duration_curve(df):
 
     for col in df.columns:
         # Drop NaN to avoid messing up the duration
-        s = df[col].dropna()
+        s = df[col]#.dropna()
 
         if s.empty:
             raise ValueError(f"Column '{col}' contains only NaN values.")
@@ -133,9 +135,9 @@ def plot_price_duration_curves(
     for col in pdc_df.columns:
         ax.plot(x_percent, pdc_df[col], label=str(col))
 
-    ax.set_xlabel("Duration [%]")
+    ax.set_xlabel("Fraction of time[%]")
     ax.set_ylabel("Electricity price [€/MWh]")
-    ax.set_title("Price-duration curves (0–100%)")
+    ax.set_title("Electricity price duration curves")
 
     if (y_min is not None) or (y_max is not None):
         ax.set_ylim(bottom=y_min, top=y_max)
