@@ -1,6 +1,8 @@
 from methods import (
     duration_curves_from_ariadne_report,
-    elec_prices_ts_from_ariadne_report_1h
+    elec_prices_ts_from_ariadne_report_1h,
+    duration_curves_from_pypsa_one_node,
+    elec_prices_ts_from_pypsa_one_node_1h
 )
 
 from network import load_elec_price_ts_pypsa_one_node
@@ -21,8 +23,11 @@ if __name__ == "__main__":
 
     print(pdc_df.head())
 
-    df_prices = load_elec_price_ts_pypsa_one_node(years=args["years"])
+    df_1h_pypsa = elec_prices_ts_from_pypsa_one_node_1h(args)
+    print(df_1h_pypsa.head())
 
-    print(df_prices.head())
-    print(df_prices.shape)
+    pdc_pypsa = duration_curves_from_pypsa_one_node(args)
+    print(pdc_pypsa.head())
+
+
 
