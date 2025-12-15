@@ -16,7 +16,7 @@ class germany_network:
             return s
 
 
-def load_price_timeseries_dataframe(
+def load_elec_price_ts_pypsa_one_node(
     years
 ):
     """

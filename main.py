@@ -1,6 +1,9 @@
-from methods import duration_curves_from_ariadne_report
+from methods import (
+    duration_curves_from_ariadne_report,
+    elec_prices_ts_from_ariadne_report_1h
+)
 
-from network import load_price_timeseries_dataframe
+from network import load_elec_price_ts_pypsa_one_node
 
 args = {
     "ariadne_ep_ts" : "input/electricity_prices_pypsa_DE_timeseries_ariadne_report", # electricity price time series from ariadne report
@@ -10,11 +13,15 @@ args = {
 
 if __name__ == "__main__":
 
-    duration_curves_from_ariadne_report(args)
+    df_1h = elec_prices_ts_from_ariadne_report_1h(args)
 
-    df_prices = load_price_timeseries_dataframe(
-        years=args["years"]
-    )
+    print(df_1h.head())
+
+    pdc_df = duration_curves_from_ariadne_report(args)
+
+    print(pdc_df.head())
+
+    df_prices = load_elec_price_ts_pypsa_one_node(years=args["years"])
 
     print(df_prices.head())
     print(df_prices.shape)

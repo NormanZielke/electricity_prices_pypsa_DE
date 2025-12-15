@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 plt.style.use("bmh")
 
 
-def load_electricity_price_timeseries(
+def load_elec_price_timeseries(
     folder = "input/electricity_prices_pypsa_DE_timeseries_ariadne_report"
 ):
     """
@@ -58,6 +58,34 @@ def load_electricity_price_timeseries(
     combined = combined.reindex(sorted(combined.columns), axis=1)
 
     return combined
+
+
+def interpolate_prices_to_hourly(df_3h):
+    """
+    Upsample price time series from 3-hour steps to 1-hour steps via linear interpolation.
+
+    Assumptions:
+    - df_3h.index is a DatetimeIndex (timestamps)
+    - columns are years (or any identifiers) with numeric price values
+
+    Returns:
+    - df_1h with hourly frequency and linearly interpolated values per column
+    """
+    if not isinstance(df_3h.index, pd.DatetimeIndex):
+        raise TypeError("df_3h.index must be a pandas DatetimeIndex.")
+
+    df = df_3h.copy()
+
+    # Ensure sorted unique timestamps
+    df = df[~df.index.duplicated(keep="first")].sort_index()
+
+    # Upsample to 1H grid and interpolate in time
+    df_1h = (
+        df.resample("1h").asfreq()
+          .interpolate(method="time", limit_direction="both")
+    )
+
+    return df_1h
 
 
 def compute_price_duration_curve(df):
