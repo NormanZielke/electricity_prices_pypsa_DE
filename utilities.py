@@ -180,3 +180,45 @@ def plot_price_duration_curves(
 
     return file_path
 
+
+def plot_daily_mean_price_timeseries(
+    df_prices,
+    save_path="outputs/price-duration_curves",
+    filename="daily_mean_electricity_prices.png",
+    y_min= 0,
+    y_max= 400,
+    figsize=(25, 10),
+):
+    """
+    Plot electricity price time series as daily mean values (no sorting).
+    """
+    import pandas as pd
+
+    if not isinstance(df_prices.index, pd.DatetimeIndex):
+        raise TypeError("df_prices.index must be a pandas DatetimeIndex.")
+
+    df = df_prices.copy()
+    df = df[~df.index.duplicated(keep="first")].sort_index()
+
+    # Daily mean values
+    df_daily = df.resample("D").mean()
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    df_daily.plot(ax=ax)
+
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Electricity price")
+
+    if y_min is not None or y_max is not None:
+        ax.set_ylim(bottom=y_min, top=y_max)
+
+    out_dir = Path(save_path)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_file = out_dir / filename
+
+    fig.savefig(out_file, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+    print(f"Saved daily mean price timeseries plot to {out_file}")
+

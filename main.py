@@ -5,7 +5,9 @@ from methods import (
     elec_prices_ts_from_pypsa_one_node_1h
 )
 
-from network import load_elec_price_ts_pypsa_one_node
+from utilities import(
+    plot_daily_mean_price_timeseries
+)
 
 args = {
     "ariadne_ep_ts" : "input/electricity_prices_pypsa_DE_timeseries_ariadne_report", # electricity price time series from ariadne report
@@ -18,13 +20,25 @@ if __name__ == "__main__":
 
     # Ariadne
 
-    elec_prices_ts_from_ariadne_report_1h(args)
+    df_1h = elec_prices_ts_from_ariadne_report_1h(args)
+
+    plot_daily_mean_price_timeseries(
+        df_1h,
+        save_path="outputs/ariadne/plots",
+        filename="daily_mean_electricity_prices_ariadne.png",
+    )
 
     duration_curves_from_ariadne_report(args)
 
     # Pypsa-DE (One Node)
 
-    elec_prices_ts_from_pypsa_one_node_1h(args)
+    df_1h = elec_prices_ts_from_pypsa_one_node_1h(args)
+
+    plot_daily_mean_price_timeseries(
+        df_1h,
+        save_path="outputs/one_node/plots",
+        filename="daily_mean_electricity_prices_one_node.png",
+    )
 
     duration_curves_from_pypsa_one_node(args)
 
