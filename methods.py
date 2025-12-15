@@ -1,3 +1,4 @@
+from pathlib import Path
 
 from utilities import (
     load_elec_price_timeseries,
@@ -15,6 +16,14 @@ def elec_prices_ts_from_ariadne_report_1h(args):
 
     df_1h = interpolate_prices_to_hourly(df_3h)
 
+    out_dir = Path(args["output_base_dir"]) / "ariadne"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    csv_path = out_dir / "elec_prices_ariadne.csv"
+    df_1h.to_csv(csv_path)
+
+    print(f"Saved Ariadne hourly electricity prices to {csv_path}")
+
     return df_1h
 
 
@@ -24,15 +33,12 @@ def duration_curves_from_ariadne_report(args):
 
     pdc_df = compute_price_duration_curve(df_1h)
 
-    print("Loaded electricity price timeseries:")
-    print(df_1h.head())
+    out_dir = Path(args["output_base_dir"]) / "ariadne"
+    png_path = out_dir / "price_duration_curves_ariadne.png"
 
-    print(df_1h.mean())
+    plot_price_duration_curves(pdc_df, save_path=png_path)
 
-    print("Loaded price duration curves data:")
-    print(pdc_df.head())
-
-    plot_price_duration_curves(pdc_df)
+    print(f"Saved Ariadne price duration curves plot to {png_path}")
 
     return pdc_df
 
@@ -44,6 +50,15 @@ def elec_prices_ts_from_pypsa_one_node_1h(args):
     """
     df_3h = load_elec_price_ts_pypsa_one_node(years=args["years"])
     df_1h = interpolate_prices_to_hourly(df_3h)
+
+    out_dir = Path(args["output_base_dir"]) / "one_node"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    csv_path = out_dir / "elec_prices_one_node.csv"
+    df_1h.to_csv(csv_path)
+
+    print(f"Saved PyPSA one-node hourly electricity prices to {csv_path}")
+
     return df_1h
 
 
@@ -55,10 +70,13 @@ def duration_curves_from_pypsa_one_node(args):
 
     pdc_df = compute_price_duration_curve(df_1h)
 
-    print("Loaded PyPSA one-node electricity price timeseries (1h):")
-
-    print("Loaded price duration curves data (PyPSA one-node):")
-
     plot_price_duration_curves(pdc_df)
+
+    out_dir = Path(args["output_base_dir"]) / "one_node"
+    png_path = out_dir / "price_duration_curves_ariadne.png"
+
+    plot_price_duration_curves(pdc_df, save_path=png_path)
+
+    print(f"Saved PyPSA one-node price duration curves plot to {png_path}")
 
     return pdc_df

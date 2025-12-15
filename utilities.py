@@ -141,7 +141,7 @@ def plot_price_duration_curves(
     pdc_df,
     y_min = 0,
     y_max = 400,
-    output_folder = "outputs/price-duration_curves",
+    save_path = "outputs/price-duration_curves",
     filename = "price_duration_curves.png",
 ):
     """
@@ -151,7 +151,7 @@ def plot_price_duration_curves(
     if pdc_df.empty:
         raise ValueError("Input DataFrame for plotting is empty.")
 
-    output_path = Path(output_folder)
+    output_path = Path(save_path)
     output_path.mkdir(parents=True, exist_ok=True)
 
     # ---- Rank -> Prozent ----
