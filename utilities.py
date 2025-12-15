@@ -190,9 +190,8 @@ def plot_daily_mean_price_timeseries(
     figsize=(25, 10),
 ):
     """
-    Plot electricity price time series as daily mean values (no sorting).
+    Plot electricity price time series as daily mean values.
     """
-    import pandas as pd
 
     if not isinstance(df_prices.index, pd.DatetimeIndex):
         raise TypeError("df_prices.index must be a pandas DatetimeIndex.")
