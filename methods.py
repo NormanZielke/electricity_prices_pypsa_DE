@@ -35,12 +35,13 @@ def duration_curves_from_ariadne_report(args):
 
     out_dir = Path(args["output_base_dir"]) / "ariadne"
     png_path = out_dir / "price_duration_curves_ariadne.png"
+    filename = "price_duration_curves_ariadne"
 
-    plot_price_duration_curves(pdc_df, save_path=png_path)
+    plot_price_duration_curves(pdc_df, save_path=png_path, filename=filename)
 
     print(f"Saved Ariadne price duration curves plot to {png_path}")
 
-    return pdc_df
+    return
 
 
 def elec_prices_ts_from_pypsa_one_node_1h(args):
@@ -70,13 +71,12 @@ def duration_curves_from_pypsa_one_node(args):
 
     pdc_df = compute_price_duration_curve(df_1h)
 
-    plot_price_duration_curves(pdc_df)
-
     out_dir = Path(args["output_base_dir"]) / "one_node"
-    png_path = out_dir / "price_duration_curves_ariadne.png"
+    png_path = out_dir / "price_duration_curves_pypsa_one_node.png"
+    filename = "price_duration_curves_one_node"
 
-    plot_price_duration_curves(pdc_df, save_path=png_path)
+    plot_price_duration_curves(pdc_df, save_path=png_path, filename=filename)
 
     print(f"Saved PyPSA one-node price duration curves plot to {png_path}")
 
-    return pdc_df
+    return

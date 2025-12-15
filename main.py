@@ -16,19 +16,17 @@ args = {
 
 if __name__ == "__main__":
 
-    df_1h = elec_prices_ts_from_ariadne_report_1h(args)
+    # Ariadne
 
-    print(df_1h.head())
+    elec_prices_ts_from_ariadne_report_1h(args)
 
-    pdc_df = duration_curves_from_ariadne_report(args)
+    duration_curves_from_ariadne_report(args)
 
-    print(pdc_df.head())
+    # Pypsa-DE (One Node)
 
-    df_1h_pypsa = elec_prices_ts_from_pypsa_one_node_1h(args)
-    print(df_1h_pypsa.head())
+    elec_prices_ts_from_pypsa_one_node_1h(args)
 
-    pdc_pypsa = duration_curves_from_pypsa_one_node(args)
-    print(pdc_pypsa.head())
+    duration_curves_from_pypsa_one_node(args)
 
 
 

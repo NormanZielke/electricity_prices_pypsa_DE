@@ -178,6 +178,5 @@ def plot_price_duration_curves(
     fig.savefig(file_path, dpi=300)
     plt.close(fig)
 
-
     return file_path
 
