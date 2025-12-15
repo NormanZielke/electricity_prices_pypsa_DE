@@ -7,7 +7,7 @@ plt.style.use("bmh")
 
 
 def load_electricity_price_timeseries(
-    folder: str = "input/electricity_prices_pypsa_DE_timeseries"
+    folder = "input/electricity_prices_pypsa_DE_timeseries_ariadne_report"
 ):
     """
     Load all electricity price timeseries from the given folder and combine them
@@ -110,12 +110,12 @@ def compute_price_duration_curve(df):
 
 
 def plot_price_duration_curves(
-    pdc_df: pd.DataFrame,
-    y_min: float | None = 0,
-    y_max: float | None = 400,
-    output_folder: str = "outputs/price-duration_curves",
-    filename: str = "price_duration_curves.png",
-) -> Path:
+    pdc_df,
+    y_min = 0,
+    y_max = 400,
+    output_folder = "outputs/price-duration_curves",
+    filename = "price_duration_curves.png",
+):
     """
     Plot price-duration curves for all columns in the given DataFrame (pdc_df)
     and convert the x-axis (rank) to percentage (0–100%).
@@ -149,6 +149,7 @@ def plot_price_duration_curves(
     file_path = output_path / filename
     fig.savefig(file_path, dpi=300)
     plt.close(fig)
+
 
     return file_path
 
