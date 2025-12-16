@@ -34,8 +34,8 @@ def duration_curves_from_ariadne_report(args):
     pdc_df = compute_price_duration_curve(df_1h)
 
     out_dir = Path(args["output_base_dir"]) / "ariadne"
-    png_path = out_dir / "price_duration_curves_ariadne.png"
-    filename = "price_duration_curves_ariadne"
+    png_path = out_dir / "plots"
+    filename = "price_duration_curves_ariadne.png"
 
     plot_price_duration_curves(pdc_df, save_path=png_path, filename=filename)
 
@@ -72,8 +72,8 @@ def duration_curves_from_pypsa_one_node(args):
     pdc_df = compute_price_duration_curve(df_1h)
 
     out_dir = Path(args["output_base_dir"]) / "one_node"
-    png_path = out_dir / "price_duration_curves_pypsa_one_node.png"
-    filename = "price_duration_curves_one_node"
+    png_path = out_dir / "plots"
+    filename = "price_duration_curves_one_node.png"
 
     plot_price_duration_curves(pdc_df, save_path=png_path, filename=filename)
 

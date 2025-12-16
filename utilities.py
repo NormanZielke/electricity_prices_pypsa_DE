@@ -63,13 +63,7 @@ def load_elec_price_timeseries(
 def interpolate_prices_to_hourly(df_3h):
     """
     Upsample price time series from 3-hour steps to 1-hour steps via linear interpolation.
-
-    Assumptions:
-    - df_3h.index is a DatetimeIndex (timestamps)
-    - columns are years (or any identifiers) with numeric price values
-
-    Returns:
-    - df_1h with hourly frequency and linearly interpolated values per column
+    Includes wrap-around interpolation between last and first timestep.
     """
     if not isinstance(df_3h.index, pd.DatetimeIndex):
         raise TypeError("df_3h.index must be a pandas DatetimeIndex.")
@@ -79,11 +73,22 @@ def interpolate_prices_to_hourly(df_3h):
     # Ensure sorted unique timestamps
     df = df[~df.index.duplicated(keep="first")].sort_index()
 
+    # Infer original timestep (expected: 3h)
+    step = df.index[1] - df.index[0]
+
+    # Add artificial wrap-around timestep (last + step) with first values
+    wrap_ts = df.index[-1] + step
+    df.loc[wrap_ts] = df.iloc[0]
+
     # Upsample to 1H grid and interpolate in time
     df_1h = (
         df.resample("1h").asfreq()
           .interpolate(method="time", limit_direction="both")
     )
+
+    # Keep only original period incl. last missing hours (e.g. until 23:00)
+    end_ts = df.index[-2] + (step - pd.Timedelta(hours=1))
+    df_1h = df_1h.loc[df.index[0]:end_ts]
 
     return df_1h
 
